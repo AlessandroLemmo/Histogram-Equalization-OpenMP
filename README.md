@@ -23,5 +23,5 @@ If you want to replicate the same project from zero compute the following steps:
 8. Propertirs -> Tab C/C++ -> Language -> OpenMP support -> set Yes
 9. Propertirs -> Tab C/C++ -> Command Line -> Additional Options -> add /Zc:twoPhase- 
 10. Properties -> Tab Linker -> Sub-Tab General -> Additional Library Directories -> C:\opencv\build\x64\vc14\lib (if opencv is installed in disk C)
-10. Properties -> Tab Linker -> Sub-Tab Input -> Additional Dependencies -> opencv_world420.lib, opencv_world420d.lib 
+9. Properties -> Tab Linker -> Sub-Tab Input -> Additional Dependencies -> opencv_world420.lib, opencv_world420d.lib 
 
