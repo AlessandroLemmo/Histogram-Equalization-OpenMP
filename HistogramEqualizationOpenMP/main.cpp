@@ -20,13 +20,9 @@ void RGB_to_YCbCr(unsigned char* ptr_image, int* histogram, int width, int heigh
     omp_set_dynamic(0);
     #pragma omp parallel num_threads(32) default(shared)
     {
-        // with static, When k>n, threads are assigned to k/n chunks of iteration space
-        // where k = number of iterations; n = number of threads
-        //#pragma omp for schedule(static) 
         #pragma omp for schedule(static) collapse(2)
         
             for (int i = 0; i < height; i++) {
-
                 for (int j = 0; j < width; j++) {
 
                     int pixel_idx = (i * width + j) * 3;
@@ -47,9 +43,7 @@ void RGB_to_YCbCr(unsigned char* ptr_image, int* histogram, int width, int heigh
                     ptr_image[pixel_idx + 1] = Cb;
                     ptr_image[pixel_idx + 2] = Cr;
                 }
-            }
-            
-        
+            }     
     }
 }
 
@@ -62,14 +56,14 @@ void equalize(int* histogram, int* histogram_eq, int width, int height)
     int cdf[256] = { 0 };
     cdf[0] = histogram[0];
 
-#pragma omp parallel for
+    #pragma omp parallel for
     for (int i = 1; i < 256; i++)
     {
         sum += histogram[i];
         cdf[i] = sum;
     }
 
-#pragma omp parallel for
+    #pragma omp parallel for
     for (int i = 1; i < 256; i++) {
         histogram_eq[i] = (int)(((float)cdf[i] - cdf[0]) / ((float)width * height - 1) * 255);
     }
@@ -85,7 +79,6 @@ void YCbCr_to_RGB(unsigned char* ptr_image, int* equalized, int width, int heigh
         #pragma omp for schedule(static) collapse(2)
         
             for (int i = 0; i < height; i++) {
-
                 for (int j = 0; j < width; j++) {
 
                     int index = (i * width + j) * 3;
@@ -102,8 +95,7 @@ void YCbCr_to_RGB(unsigned char* ptr_image, int* equalized, int width, int heigh
                     ptr_image[index + 1] = G;
                     ptr_image[index + 2] = B;
                 }
-            }
-        
+            }   
     }
 }
 
@@ -113,7 +105,6 @@ int main() {
 
     // Load the image
     Mat image = imread("images/image5.jpg");
-
     
     namedWindow("Original Image", 0);
     resizeWindow("Equalized Image", 800, 600);
